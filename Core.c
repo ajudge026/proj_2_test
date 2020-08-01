@@ -6,6 +6,7 @@ Core *initCore(Instruction_Memory *i_mem)
     core->clk = 0;
     core->PC = 0;
     core->instr_mem = i_mem;
+    printf("in initcore. before initfunctcall\n");
     core->tick = tickFunc;
 
     // FIXME, initialize register file here.
@@ -20,6 +21,7 @@ Core *initCore(Instruction_Memory *i_mem)
 // FIXME, implement this function
 bool tickFunc(Core *core)
 {
+    printf("just started tick func\n");
     // Steps may include
     // (Step 1) Reading instruction from instruction memory
     unsigned instruction = core->instr_mem->instructions[core->PC / 4].instruction;
