@@ -20,46 +20,14 @@ void loadInstructions(Instruction_Memory *i_mem, const char *trace)
 
     Addr PC = 0; // program counter points to the zeroth location initially.
     int IMEM_index = 0;
-    while ((read = getline(&line, &len, fd)) != -1)
+	read = getline(&line, &len, fd);
+    while (read != -1)
     {
-        // Assign program counter
-        i_mem->instructions[IMEM_index].addr = PC;
-
-        // Extract operation for R-Type
-        char *raw_instr = strtok(line, " ");
-        if (strcmp(raw_instr, "add") == 0 ||
-            strcmp(raw_instr, "sub") == 0 ||
-            strcmp(raw_instr, "sll") == 0 ||
-            strcmp(raw_instr, "srl") == 0 ||
-            strcmp(raw_instr, "xor") == 0 ||
-            strcmp(raw_instr, "or")  == 0 ||
-            strcmp(raw_instr, "and") == 0)
-        {
-		//printf("The type of instruction is: %s\n", raw_instr);
-            parseRType(raw_instr, &(i_mem->instructions[IMEM_index]));
-            i_mem->last = &(i_mem->instructions[IMEM_index]);
-        }
-		
-		// Extract operation for I-Type		
-	else if (strcmp(raw_instr, "addi") == 0 ||
-            strcmp(raw_instr, "slli") == 0 ||
-             strcmp(raw_instr, "ld") == 0 )
-        {
-		//printf("The type of instruction is: %s\n", raw_instr);
-    		parseIType(raw_instr, &(i_mem->instructions[IMEM_index]));
-            i_mem->last = &(i_mem->instructions[IMEM_index]);
-        }
-		
-		
-		// Extract operation for SB-Type		
-     else if (strcmp(raw_instr, "bne") == 0  )
-        {
-            parseSBType(raw_instr, &(i_mem->instructions[IMEM_index]));
-            i_mem->last = &(i_mem->instructions[IMEM_index]);
-        } 
-
+        // finding if it works
         IMEM_index++;
- PC += 4;
+ 	PC += 4;
+	read = getline(&line, &len, fd)
+	printf("the line is %s\n", read);
     }
 
     fclose(fd);
