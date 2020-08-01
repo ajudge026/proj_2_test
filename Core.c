@@ -45,7 +45,7 @@ bool tickFunc(Core *core)
 	// run immGen 
 		
 	Signal ImmeGen_sig = ImmeGen(instruction); // <------------------------------------ not finished, fix this!!!!!!!!!!!!!
-/* 	
+
 	//get reg values
 	
 	// get inputs for reg file from instructions
@@ -97,7 +97,7 @@ bool tickFunc(Core *core)
 	core->reg_file[write_register] = mux_3_signal;
 	incremented_instruction = core->PC = mux_3_signal;
 	//printf("The data in register %x is %lx",write_register, core->reg_file[write_register]);
- */
+ 
  
     ++core->clk;
     // Are we reaching the final instruction?
