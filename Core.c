@@ -44,7 +44,8 @@ bool tickFunc(Core *core)
 	ControlUnit(control_unit_input, signals);
 	// run immGen 
 		
-	Signal ImmeGen_sig = ImmeGen((Signal)instruction); // <------------------------------------ not finished, fix this!!!!!!!!!!!!!
+	//Signal ImmeGen_sig = ImmeGen((Signal)instruction); // 
+	Signal ImmeGen_sig = (Signal)instruction; // 
  	printf("after ImmeGen");
 	//get reg values
 	
