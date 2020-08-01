@@ -181,8 +181,8 @@ Signal ALUControlUnit(Signal ALUOp,
 // FIXME (3). Imme. Generator
 Signal ImmeGen(Signal input)
 {
-	long ImmeGen_var = (long )input;
-	return ImmeGen_var
+	//long ImmeGen_var = (long )input;
+	return input;
 }
 
 // FIXME (4). ALU
