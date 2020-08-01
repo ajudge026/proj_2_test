@@ -26,7 +26,7 @@ void loadInstructions(Instruction_Memory *i_mem, const char *trace)
         // finding if it works
         IMEM_index++;
  	PC += 4;
-	read = getline(&line, &len, fd)
+	read = getline(&line, &len, fd);
 	printf("the line is %s\n", read);
     }
 
