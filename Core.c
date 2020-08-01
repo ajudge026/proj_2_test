@@ -58,7 +58,7 @@ Core *initCore(Instruction_Memory *i_mem)
     // FIXME, initialize data memory here.
     // core->reg_file[0] = ...
 
-    //register file setting
+    //set the reg_file
     core->reg_file[25] = 4;
     core->reg_file[10] = 4;
     core->reg_file[22] = 1;
@@ -72,38 +72,47 @@ bool tickFunc(Core *core)
     // Steps may include
     // (Step 1) Reading instruction from instruction memory
     unsigned instruction = core->instr_mem->instructions[core->PC / 4].instruction;
-    printf("Instruction: %u\n", instruction);
-    // (Step 2) ...
+    
+	// (Step 2) ...
+	// prints instructions in decimal
+	printf("Instruction: %u\n", instruction);
+    
 
-    Signal input = instruction & 127;
+    Signal input = (instruction & 127);
+	// prints opcode in decimal
+	
     printf("Opcode: %ld\n", input); 
-
+	
+	//holds signals from the controller
     ControlSignals signals;
     ControlUnit(input, &signals);
 
-    Signal Funct3 = (instruction >> (7 + 5)) & 7;
-    Signal Funct7 = (instruction >> (7 + 5 + 3 + 5 + 5)) & 127;
-    Signal ALU_ctrl_signal = ALUControlUnit(signals.ALUOp, Funct7, Funct3);
+    Signal func3 =( (instruction >> (7 + 5)) & 7);
+    
+	Signal func7 = ((instruction >> (7 + 5 + 3 + 5 + 5)) & 127);
+    Signal ALU_ctrl_signal = ALUControlUnit(signals.ALUOp, func7, func3);
 
-    Register r1 = (instruction >> (7 + 5 + 3)) & 31;
-    Register r2 = (instruction >> (7 + 5 + 3 + 5)) & 31;
+    Register reg_1 = (instruction >> (7 + 5 + 3)) & 31;
+    
+	Register reg_2 = (instruction >> (7 + 5 + 3 + 5)) & 31;
 
     //create signal input to ALU from read data 1 output
-    Signal input_0;
-    input_0 = core->reg_file[r1];
+    Signal alu_in_0;
+    alu_in_0 = core->reg_file[reg_1];
 
-    Signal input_1 = MUX(signals.ALUSrc,core->reg_file[r2],ImmeGen(instruction));
-    Signal ALU_result;
-    Signal zero;
+    Signal alu_in_1 = MUX(signals.ALUSrc,core->reg_file[reg_2],ImmeGen(instruction));
+    Signal ALU_output;
+	
+    Signal zero_alu_input;
 
-    ALU(input_0, input_1, ALU_ctrl_signal, &ALU_result, &zero);
-    printf("ALU out: %ld\n", ALU_result);
+    ALU(alu_in_0, alu_in_1, ALU_ctrl_signal, &ALU_output, &zero_alu_input);
+    printf("ALU out: %ld\n", ALU_output);
 
     Register write_reg = (instruction >> 7) & 31;
 
     if(signals.MemWrite)
     {
-        core->data_mem[ALU_result] = input_1;
+        core->data_mem[ALU_output] = alu_in_1;
     }
 
     Signal read_data_mem = 0;
@@ -117,20 +126,20 @@ bool tickFunc(Core *core)
     //if selector s = 1, PC = jump address
     //if s = 0, PC = PC + 4
 
-    read_data_mem |= core->data_mem[ALU_result + 7];
+    read_data_mem |= core->data_mem[ALU_output + 7];
 
-    read_data_mem = read_data_mem << 8 | core->data_mem[ALU_result + 6];
-    read_data_mem = read_data_mem << 16 | core->data_mem[ALU_result + 5];
-    read_data_mem = read_data_mem << 24 | core->data_mem[ALU_result + 4];
-    read_data_mem = read_data_mem << 32 | core->data_mem[ALU_result + 3];
-    read_data_mem = read_data_mem << 40 | core->data_mem[ALU_result + 2];
-    read_data_mem = read_data_mem << 48 | core->data_mem[ALU_result + 1];
-    read_data_mem = read_data_mem << 56 | core->data_mem[ALU_result + 0];
+    read_data_mem = read_data_mem << 8 | core->data_mem[ALU_output + 6];
+    read_data_mem = read_data_mem << 16 | core->data_mem[ALU_output + 5];
+    read_data_mem = read_data_mem << 24 | core->data_mem[ALU_output + 4];
+    read_data_mem = read_data_mem << 32 | core->data_mem[ALU_output + 3];
+    read_data_mem = read_data_mem << 40 | core->data_mem[ALU_output + 2];
+    read_data_mem = read_data_mem << 48 | core->data_mem[ALU_output + 1];
+    read_data_mem = read_data_mem << 56 | core->data_mem[ALU_output + 0];
     printf("%ld\n", read_data_mem);
 
     if(signals.RegWrite)
     {
-        core->reg_file[write_reg] = MUX(signals.MemtoReg, ALU_result, read_data_mem);
+        core->reg_file[write_reg] = MUX(signals.MemtoReg, ALU_output, read_data_mem);
     }
 
     printf("ImmeGen: %ld\n", ImmeGen(input));
@@ -139,7 +148,7 @@ bool tickFunc(Core *core)
     printf("Register x11: %ld\n", core->reg_file[11]);
 
     Signal shifted_signal = ShiftLeft1(ImmeGen(input));
-    core->PC = Add(core->PC, MUX((zero & signals.Branch), 4, (signed int)shifted_signal));
+    core->PC = Add(core->PC, MUX((zero_alu_input & signals.Branch), 4, (signed int)shifted_signal));
     printf("PC: %ld\n", core->PC);
 
 
