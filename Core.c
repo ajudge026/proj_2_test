@@ -41,8 +41,8 @@ bool tickFunc(Core *core)
 	
 	// call control unit 
 	 Signal control_unit_input = (instruction / 64);
-	ControlSignals *signals = NULL;
-	ControlUnit(control_unit_input, signals);
+	ControlSignals signals;
+	ControlUnit(control_unit_input, &signals);
 	printf("after control unit ");
 	// run immGen 
 		
@@ -58,12 +58,13 @@ bool tickFunc(Core *core)
 	write_register = (instruction / 2048)>>7;
 	Signal reg_read_1 = 0;
 	Signal reg_read_2 = 0;
-	if ( signals->RegWrite== 0 )
+	
+	if ( signals.RegWrite== 0 )
 	{
 		reg_read_1 = core->reg_file[reg_index_1];
 		reg_read_2 = core->reg_file[reg_index_2];
 	}
-	else if (signals->RegWrite == 1)		
+	else if (signals.RegWrite == 1)		
 	{
 		core->reg_file[reg_index_1] = 0;// result of memory manipulation Mux all the way to the right <------------------------------------------- fix this
 	
@@ -72,12 +73,12 @@ bool tickFunc(Core *core)
 	//call 
 	// ** execute / address calc
 	// mux1
-	Signal mux_1_signal = MUX( signals->ALUSrc, reg_read_2,ImmeGen_sig);
+	Signal mux_1_signal = MUX( signals.ALUSrc, reg_read_2,ImmeGen_sig);
 			
 	
 	
 	//Alu control 
-	Signal aluControlResult = ALUControlUnit(signals->ALUOp, instruction>>24,instruction >> 11); // < ---------- make sure bit slicing si right 
+	Signal aluControlResult = ALUControlUnit(signals.ALUOp, instruction>>24,instruction >> 11); // < ---------- make sure bit slicing si right 
 	// alu 	
 	Signal *ALU_result = NULL;
 	Signal *zero = NULL;
@@ -88,14 +89,14 @@ bool tickFunc(Core *core)
 	
 	Signal memory_result ;
 	memory_result = 0; // <----------------------- will fix when  dealing with ld 
-	Signal mux_2_signal = MUX(signals->MemtoReg, *ALU_result, memory_result); // fix this 
+	Signal mux_2_signal = MUX(signals.MemtoReg, *ALU_result, memory_result); // fix this 
 	printf("%lld", mux_2_signal);
 	// <-------------------- figure out how i type loads results in  register 
 	
 	
 	
 	// mux 3
-	Signal mux_3_control = *zero && signals->Branch ;
+	Signal mux_3_control = *zero && signals.Branch ;
 	Signal mux_3_signal = MUX( mux_3_control,incremented_instruction,branch_location);
 	//write results
 	core->reg_file[write_register] = mux_3_signal;
