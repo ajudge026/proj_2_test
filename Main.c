@@ -17,12 +17,13 @@ int main(int argc, const char *argv[])
     // (2) store the translated binary instructions into instruction memory.
     Instruction_Memory instr_mem;
     instr_mem.last = NULL;
+    printf("before the ld instr");
     loadInstructions(&instr_mem, argv[1]);
-
+    printf("after the ld instr");
     /* Task Two */
     // TODO, implement Core.{h,c}
     Core *core = initCore(&instr_mem);
-
+    printf("after init core");
     /* Task Three - Simulation */
     while (core->tick(core));
 
