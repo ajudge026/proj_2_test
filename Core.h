@@ -77,4 +77,3 @@ Signal Add(Signal input_0,
 Signal ShiftLeft1(Signal input);
 
 #endif
-
