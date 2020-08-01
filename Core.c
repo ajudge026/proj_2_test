@@ -92,7 +92,7 @@ bool tickFunc(Core *core)
 	//write results
 	core->reg_file[write_register] = mux_3_signal;
 	incremented_instruction = core->PC = mux_3_signal;
-	printf("The data in register %x is %x",write_register, core->reg_file[write_register]);
+	printf("The data in register %x is %lx",write_register, core->reg_file[write_register]);
     
 
     ++core->clk;
