@@ -64,7 +64,7 @@ bool tickFunc(Core *core)
 		core->reg_file[reg_index_1] = 0;// result of memory manipulation Mux all the way to the right
 	
 	}
-	
+	/* 
 	//call 
 	// ** execute / address calc
 	// mux1
@@ -96,7 +96,7 @@ bool tickFunc(Core *core)
 	core->reg_file[write_register] = mux_3_signal;
 	incremented_instruction = core->PC = mux_3_signal;
 	//printf("The data in register %x is %lx",write_register, core->reg_file[write_register]);
-    
+ */    
  
     ++core->clk;
     // Are we reaching the final instruction?
