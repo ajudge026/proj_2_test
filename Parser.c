@@ -22,41 +22,13 @@ void loadInstructions(Instruction_Memory *i_mem, const char *trace)
     int IMEM_index = 0;
     while ((read = getline(&line, &len, fd)) != -1)
     {
-        // Assign program counter
-        i_mem->instructions[IMEM_index].addr = PC;
-
-        // Extract operation
-        char *raw_instr = strtok(line, " ");
-        if (strcmp(raw_instr, "add") == 0 ||
-            strcmp(raw_instr, "sub") == 0 ||
-            strcmp(raw_instr, "sll") == 0 ||
-            strcmp(raw_instr, "srl") == 0 ||
-            strcmp(raw_instr, "xor") == 0 ||
-            strcmp(raw_instr, "or")  == 0 ||
-            strcmp(raw_instr, "and") == 0)
-        {
-            parseRType(raw_instr, &(i_mem->instructions[IMEM_index]));
-            i_mem->last = &(i_mem->instructions[IMEM_index]);
-	}
-
-         if (strcmp(raw_instr, "ld") == 0   ||
-             strcmp(raw_instr, "addi") == 0 ||
-             strcmp(raw_instr, "slli") == 0)
-        {
-            parseIType(raw_instr, &(i_mem->instructions[IMEM_index]));
-            i_mem->last = &(i_mem->instructions[IMEM_index]);
-        }
-
-        if (strcmp(raw_instr, "bne") == 0)
-        {
-            parseSBType(raw_instr, &(i_mem->instructions[IMEM_index]));
-            i_mem->last = &(i_mem->instructions[IMEM_index]);
-        }
+        
 
 
         IMEM_index++;
         PC += 4;
     }
+	printf("finished the loop ");
 
     fclose(fd);
 }
