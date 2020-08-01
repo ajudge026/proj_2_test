@@ -182,7 +182,7 @@ void ControlUnit(Signal input,
         signals->ALUOp = 0;
     }
     // For addi , slli 
-    if (input == 19)//opcode{
+    if (input == 19){
         signals->ALUSrc = 1;
         signals->MemtoReg = 1;
         signals->RegWrite = 1;
@@ -193,7 +193,7 @@ void ControlUnit(Signal input,
     }
 	
     // For sd (S-type)
-    if (input == 35)//opcode{
+    if (input == 35){
         signals->ALUSrc = 1;
         signals->MemtoReg = 0; 
         signals->RegWrite = 0;
@@ -350,7 +350,7 @@ Signal Add(Signal input_0,
     return (input_0 + input_1);
 }
 
-// (6). ShiftLeft1
+// (6). ShiftLeft
 Signal ShiftLeft1(Signal input)
 {
     return input << 1;
