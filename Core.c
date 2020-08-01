@@ -34,10 +34,10 @@ bool tickFunc(Core *core)
 	//** instruction fetch **
 	// Steps may include
     // (Step 1) Reading instruction from instruction memory
-   /*  unsigned instruction = core->instr_mem->instructions[core->PC / 4].instruction;
+  unsigned instruction = core->instr_mem->instructions[core->PC / 4].instruction;
 	Signal incremented_instruction = core->PC += 4;	
 	printf("inside tick function ");
-	//** decoding / reg reading  **
+	/* //** decoding / reg reading  **
 	
 	// call control unit 
 	 Signal control_unit_input = (instruction / 64);
