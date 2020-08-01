@@ -25,7 +25,7 @@ bool tickFunc(Core *core)
     // Steps may include
     // (Step 1) Reading instruction from instruction memory
     unsigned instruction = core->instr_mem->instructions[core->PC / 4].instruction;
-    
+    printf("the instruction in tickfunc is %u\n", instruction);
     // (Step 2) ...
     
     // (Step N) Increment PC. FIXME, is it correct to always increment PC by 4?!
