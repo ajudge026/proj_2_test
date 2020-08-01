@@ -45,7 +45,7 @@ bool tickFunc(Core *core)
 	// run immGen 
 		
 	Signal ImmeGen_sig = ImmeGen(instruction); // <------------------------------------ not finished, fix this!!!!!!!!!!!!!
- 	
+ 	printf("after ImmeGen");
 	//get reg values
 	
 	// get inputs for reg file from instructions
