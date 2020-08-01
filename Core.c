@@ -41,7 +41,7 @@ bool tickFunc(Core *core)
 	// call control unit 
 	 Signal control_unit_input = (Signal)(instruction / 64);
 	ControlSignals *signals = NULL;
-	(ControlUnit(control_unit_input, signals);
+	ControlUnit(control_unit_input, signals);
 	// run immGen 
 		
 	Signal ImmeGen_sig = ImmeGen((Signal)instruction); // <------------------------------------ not finished, fix this!!!!!!!!!!!!!
