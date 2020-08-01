@@ -114,41 +114,39 @@ bool tickFunc(Core *core)
     {
         core->data_mem[ALU_output] = alu_in_1;
     }
-
-    Signal read_data_mem = 0;
+	
+	// core outputs of memory 
+    Signal mem_result= 0;
 
     
     // (Step N) Increment PC. FIXME, is it correct to always increment PC by 4?!
-    //core->PC += 4;  //for sequential
+    // use mux to choose branch or incremented pc values
 
-    //for conditional instructions
-    //make a mux with selector to choose between conditional address and PC+4
-    //if selector s = 1, PC = jump address
-    //if s = 0, PC = PC + 4
+    
 
-    read_data_mem |= core->data_mem[ALU_output + 7];
+    mem_result|= core->data_mem[ALU_output + 7];
 
-    read_data_mem = read_data_mem << 8 | core->data_mem[ALU_output + 6];
-    read_data_mem = read_data_mem << 16 | core->data_mem[ALU_output + 5];
-    read_data_mem = read_data_mem << 24 | core->data_mem[ALU_output + 4];
-    read_data_mem = read_data_mem << 32 | core->data_mem[ALU_output + 3];
-    read_data_mem = read_data_mem << 40 | core->data_mem[ALU_output + 2];
-    read_data_mem = read_data_mem << 48 | core->data_mem[ALU_output + 1];
-    read_data_mem = read_data_mem << 56 | core->data_mem[ALU_output + 0];
-    printf("%ld\n", read_data_mem);
+    mem_result= mem_result<< 8 | core->data_mem[ALU_output + 6];
+    mem_result= mem_result<< 16 | core->data_mem[ALU_output + 5];
+    mem_result= mem_result<< 24 | core->data_mem[ALU_output + 4];
+    mem_result= mem_result<< 32 | core->data_mem[ALU_output + 3];
+    mem_result= mem_result<< 40 | core->data_mem[ALU_output + 2];
+    mem_result= mem_result<< 48 | core->data_mem[ALU_output + 1];
+    mem_result= mem_result<< 56 | core->data_mem[ALU_output + 0];
+    printf("%ld\n", mem_result);
 
     if(signals.RegWrite)
     {
-        core->reg_file[write_reg] = MUX(signals.MemtoReg, ALU_output, read_data_mem);
+        core->reg_file[write_reg] = MUX(signals.MemtoReg, ALU_output, mem_result);
     }
 
-    printf("ImmeGen: %ld\n", ImmeGen(input));
-    printf("read_data_mem: %ld\n", read_data_mem);
-    printf("Register x9: %ld\n", core->reg_file[9]);
-    printf("Register x11: %ld\n", core->reg_file[11]);
+    printf("ImmeGen -  %ld\n", ImmeGen(input));
+    printf("mem_result - %ld\n", mem_result);
+    printf("Register x9 -  %ld\n", core->reg_file[9]); 
+    printf("Register x11 -  %ld\n", core->reg_file[11]);
 
-    Signal shifted_signal = ShiftLeft1(ImmeGen(input));
-    core->PC = Add(core->PC, MUX((zero_alu_input & signals.Branch), 4, (signed int)shifted_signal));
+    Signal shifted_immediate = ShiftLeft1(ImmeGen(input));
+    core->PC = Add(core->PC, MUX((zero_alu_input & signals.Branch), 4, (signed int)shifted_immediate));
     printf("PC: %ld\n", core->PC);
 
 
