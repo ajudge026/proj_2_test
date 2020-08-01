@@ -39,12 +39,12 @@ bool tickFunc(Core *core)
 	//** decoding / reg reading  **
 	
 	// call control unit 
-	 Signal control_unit_input = (instruction / 64);
+	 Signal control_unit_input = (Signal)(instruction / 64);
 	ControlSignals *signals = NULL;
-	ControlUnit(control_unit_input, signals);
+	(ControlUnit(control_unit_input, signals);
 	// run immGen 
 		
-	Signal ImmeGen_sig = ImmeGen(instruction); // <------------------------------------ not finished, fix this!!!!!!!!!!!!!
+	Signal ImmeGen_sig = ImmeGen((Signal)instruction); // <------------------------------------ not finished, fix this!!!!!!!!!!!!!
  	printf("after ImmeGen");
 	//get reg values
 	
