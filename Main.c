@@ -1,6 +1,5 @@
 #include <stdio.h>
 
-#include "Core.h"
 #include "Parser.h"
 
 int main(int argc, const char *argv[])
@@ -13,20 +12,28 @@ int main(int argc, const char *argv[])
     }
 
     /* Task One */
-    // TODO, (1) parse and translate all the assembly instructions into binary format;
+    // (1) parse and translate all the assembly instructions into binary format;
     // (2) store the translated binary instructions into instruction memory.
     Instruction_Memory instr_mem;
     instr_mem.last = NULL;
     loadInstructions(&instr_mem, argv[1]);
 
-    /* Task Two */
-    // TODO, implement Core.{h,c}
-    Core *core = initCore(&instr_mem);
+    // (3) print all the instruction in binary
+    unsigned PC = 0;
+    while (1)
+    {
+        Instruction *instr = &(instr_mem.instructions[PC / 4]);
+        printf("\nInstruction at PC: %u\n", PC);
+        unsigned mask = (1 << 31);
+        for (int i = 31; i >= 0; i--)
+        {
+            if (instr->instruction & mask) { printf("1 ");}
+            else { printf("0 "); }
 
-    /* Task Three - Simulation */
-    while (core->tick(core));
-
-    printf("Simulation is finished.\n");
-
-    free(core);    
+            mask >>= 1;
+        }
+        printf("\n");
+        if (instr == instr_mem.last) { break; }
+        PC += 4;
+    }
 }
