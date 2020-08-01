@@ -42,6 +42,7 @@ bool tickFunc(Core *core)
 	 Signal control_unit_input = (Signal)(instruction / 64);
 	ControlSignals *signals = NULL;
 	ControlUnit(control_unit_input, signals);
+	printf("after control unit ");
 	// run immGen 
 		
 	//Signal ImmeGen_sig = ImmeGen((Signal)instruction); // 
@@ -116,48 +117,48 @@ void ControlUnit(Signal input,
     // For R-type
     if (input == 51)
     {
-        signals->ALUSrc = 0;
-        signals->MemtoReg = 0;
-        signals->RegWrite = 1;
-        signals->MemRead = 0;
-        signals->MemWrite = 0;
-        signals->Branch = 0;
-        signals->ALUOp = 2;
+        *signals->ALUSrc = 0;
+        *signals->MemtoReg = 0;
+        *signals->RegWrite = 1;
+        *signals->MemRead = 0;
+        *signals->MemWrite = 0;
+        *signals->Branch = 0;
+        *signals->ALUOp = 2;
     }
 	// For I-type -- ld
     if (input == 3)
     {
-        signals->ALUSrc = 1;
-        signals->MemtoReg = 1;
-        signals->RegWrite = 1;
-        signals->MemRead = 1;
-        signals->MemWrite = 0;
-        signals->Branch = 0;
-        signals->ALUOp = 3;
+        *signals->ALUSrc = 1;
+        *signals->MemtoReg = 1;
+        *signals->RegWrite = 1;
+        *signals->MemRead = 1;
+        *signals->MemWrite = 0;
+        *signals->Branch = 0;
+        *signals->ALUOp = 3;
     }
 	
 	// For I-type -- slli <------------------ fix this
     if (input == 19)
     {
-        signals->ALUSrc = 1;
-        signals->MemtoReg = 0;
-        signals->RegWrite = 1;
-        signals->MemRead = 1;
-        signals->MemWrite = 0;
-        signals->Branch = 0;
-        signals->ALUOp = 3;
+        *signals->ALUSrc = 1;
+        *signals->MemtoReg = 0;
+        *signals->RegWrite = 1;
+        *signals->MemRead = 1;
+        *signals->MemWrite = 0;
+        *signals->Branch = 0;
+        *signals->ALUOp = 3;
     }
 	
 	// For sb-type -- bne <--------------------- fix this
     if (input == 99)
     {
-        signals->ALUSrc = 0;
-        signals->MemtoReg = 0;
-        signals->RegWrite = 0;
-        signals->MemRead = 0;
-        signals->MemWrite = 0;
-        signals->Branch = 1;
-        signals->ALUOp = 0;
+        *signals->ALUSrc = 0;
+        *signals->MemtoReg = 0;
+        *signals->RegWrite = 0;
+        *signals->MemRead = 0;
+        *signals->MemWrite = 0;
+        *signals->Branch = 1;
+        *signals->ALUOp = 0;
     }
 }
 
