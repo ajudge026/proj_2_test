@@ -26,7 +26,8 @@ Core *initCore(Instruction_Memory *i_mem)
 
 // FIXME, implement this function
 bool tickFunc(Core *core)
-{           
+{  
+     printf("very beginning of tickFunc");    
 
 	// *********** organized by processing stages (lecture notes #9 )****************
 	
