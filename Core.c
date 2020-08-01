@@ -355,4 +355,3 @@ Signal ShiftLeft1(Signal input)
 {
     return input << 1;
 }
-s
