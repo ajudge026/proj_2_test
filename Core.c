@@ -117,15 +117,10 @@ bool tickFunc(Core *core)
 	
 	// core outputs of memory 
     Signal mem_result= 0;
-
     
     // (Step N) Increment PC. FIXME, is it correct to always increment PC by 4?!
-    // use mux to choose branch or incremented pc values
-
-    
-
+    // use mux to choose branch or incremented pc values   
     mem_result|= core->data_mem[ALU_output + 7];
-
     mem_result= mem_result<< 8 | core->data_mem[ALU_output + 6];
     mem_result= mem_result<< 16 | core->data_mem[ALU_output + 5];
     mem_result= mem_result<< 24 | core->data_mem[ALU_output + 4];
@@ -146,8 +141,10 @@ bool tickFunc(Core *core)
     printf("Register x11 -  %ld\n", core->reg_file[11]);
 
     Signal shifted_immediate = ShiftLeft1(ImmeGen(input));
+	
     core->PC = Add(core->PC, MUX((zero_alu_input & signals.Branch), 4, (signed int)shifted_immediate));
-    printf("PC: %ld\n", core->PC);
+	
+    printf("ending Program Counter: %ld\n", core->PC);
 
 
 
@@ -165,8 +162,7 @@ void ControlUnit(Signal input,
                  ControlSignals *signals)
 {
     // For R-type
-    if (input == 51)  //opcode
-    {
+    if (input == 51) {
         signals->ALUSrc = 0;
         signals->MemtoReg = 0;
         signals->RegWrite = 1;
@@ -175,9 +171,8 @@ void ControlUnit(Signal input,
         signals->Branch = 0;
         signals->ALUOp = 2;
     }
-    // For ld (I-type)
-    if (input == 3)
-    {
+    // For ld 
+    if (input == 3) { //opcode
         signals->ALUSrc = 1;
         signals->MemtoReg = 1;
         signals->RegWrite = 1;
@@ -186,9 +181,8 @@ void ControlUnit(Signal input,
         signals->Branch = 0;
         signals->ALUOp = 0;
     }
-    // For addi and slli (I-type)
-    if (input == 19)
-    {
+    // For addi , slli 
+    if (input == 19)//opcode{
         signals->ALUSrc = 1;
         signals->MemtoReg = 1;
         signals->RegWrite = 1;
@@ -197,11 +191,11 @@ void ControlUnit(Signal input,
         signals->Branch = 0;
         signals->ALUOp = 0;
     }
+	
     // For sd (S-type)
-    if (input == 35)
-    {
+    if (input == 35)//opcode{
         signals->ALUSrc = 1;
-        signals->MemtoReg = 0; //not applicable to sd
+        signals->MemtoReg = 0; 
         signals->RegWrite = 0;
         signals->MemRead = 0;
         signals->MemWrite = 1;
@@ -209,10 +203,9 @@ void ControlUnit(Signal input,
         signals->ALUOp = 0;
     }
     // For beq (SB-type)
-    if (input == 99)
-    {
+    if (input == 99){ //opcode
         signals->ALUSrc = 0;
-        signals->MemtoReg = 0; //not applicable to beq
+        signals->MemtoReg = 0; 
         signals->RegWrite = 0;
         signals->MemRead = 0;
         signals->MemWrite = 0;
@@ -226,46 +219,46 @@ Signal ALUControlUnit(Signal ALUOp,
                       Signal Funct7,
                       Signal Funct3)
 {
-    // For add
+    //  add
     if (ALUOp == 2 && Funct7 == 0 && Funct3 == 0)
     {
         return 2;
     }
 
-    //note to self: funct fields only used when ALUOp bits equal 10 (2).
+    
 
-    // For sub (still under r-type)
+    // For subtract 
     if (ALUOp == 2 && Funct7 == 32 && Funct3 == 0)
     {
         return 6;
     }
-    // For and (still under r-type)
+    //and
     if (ALUOp == 2 && Funct7 == 0 && Funct3 == 7)
     {
         return 0;
     }
-    // For or (still under r-type)
+    //  or 
     if (ALUOp == 2 && Funct7 == 0 && Funct3 == 6)
     {
         return 1;
     }
 
-    // For ld (I-type)
+    // ld 
     if (ALUOp == 0)
     {
         return 2;
     }
-    // For sd (S-type)
+    //  sd
     if (ALUOp == 0)
     {
         return 2;
     }
-    // For beq (SB-type)
+    //  beq 
     if (ALUOp == 1)
     {
         return 6;
     }
-    // For slli
+    // slli
     if (ALUOp == 0 && Funct7 == 0 && Funct3 == 1)
     {
         return 3;
@@ -278,27 +271,23 @@ Signal ImmeGen(Signal input)
     signed int immediate = 0;
 
     //ld
-    if (input == 3)
-    {
-        //immediate = 000000000000;
+    if (input == 3){
+        // 000000000000;
         immediate = 0;
     }
     //addi
-    if (input == 19)
-    {
-        //immediate = 000000000001;
+    if (input == 19){
+        //  000000000001;
         immediate = 1;
     }
     //slli
-    if (input == 14)
-    {
-        //immediate = 000000000011;
+    if (input == 14)    {
+        //  000000000011;
         immediate = 3;
     }
     //bne
-    if (input == 99)
-    {
-        //immediate = 111111111110;
+    if (input == 99)    {
+        //  111111111110;
         immediate = -4;
     }
 
@@ -366,3 +355,4 @@ Signal ShiftLeft1(Signal input)
 {
     return input << 1;
 }
+s
