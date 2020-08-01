@@ -37,7 +37,7 @@ bool tickFunc(Core *core)
   unsigned instruction = core->instr_mem->instructions[core->PC / 4].instruction;
 	Signal incremented_instruction = core->PC += 4;	
 	printf("inside tick function ");
-	/* //** decoding / reg reading  **
+	 //** decoding / reg reading  **
 	
 	// call control unit 
 	 Signal control_unit_input = (instruction / 64);
@@ -46,13 +46,13 @@ bool tickFunc(Core *core)
 	printf("after control unit ");
 	// run immGen 
 		
-	//Signal ImmeGen_sig = ImmeGen((Signal)instruction); // 
-	Signal ImmeGen_sig = instruction; // 
+	Signal ImmeGen_sig = ImmeGen(instruction); 
+	//Signal ImmeGen_sig = instruction; // <----------------------------- temp 
  	printf("after ImmeGen");
 	//get reg values
 	
 	// get inputs for reg file from instructions
-	int reg_index_1,reg_index_2,write_register;
+	int reg_index_1,reg_index_2,write_register = 0;
 	reg_index_1 = (instruction / 524288)>>15;
 	reg_index_2 = (instruction / 16777216)>>20;
 	write_register = (instruction / 2048)>>7;
@@ -65,7 +65,7 @@ bool tickFunc(Core *core)
 	}
 	else if (signals->RegWrite == 1)		
 	{
-		core->reg_file[reg_index_1] = 0;// result of memory manipulation Mux all the way to the right
+		core->reg_file[reg_index_1] = 0;// result of memory manipulation Mux all the way to the right <------------------------------------------- fix this
 	
 	}
 
@@ -77,7 +77,7 @@ bool tickFunc(Core *core)
 	
 	
 	//Alu control 
-	Signal aluControlResult = ALUControlUnit(signals->ALUOp, instruction>>24,instruction >> 11);
+	Signal aluControlResult = ALUControlUnit(signals->ALUOp, instruction>>24,instruction >> 11); // < ---------- make sure bit slicing si right 
 	// alu 	
 	Signal *ALU_result = NULL;
 	Signal *zero = NULL;
@@ -89,6 +89,7 @@ bool tickFunc(Core *core)
 	Signal memory_result ;
 	memory_result = 0; // <----------------------- will fix when  dealing with ld 
 	Signal mux_2_signal = MUX(signals->MemtoReg, *ALU_result, memory_result); // fix this 
+	printf("%lld", mux_2_signal);
 	// <-------------------- figure out how i type loads results in  register 
 	
 	
@@ -100,7 +101,7 @@ bool tickFunc(Core *core)
 	core->reg_file[write_register] = mux_3_signal;
 	incremented_instruction = core->PC = mux_3_signal;
 	//printf("The data in register %x is %lx",write_register, core->reg_file[write_register]);
-  */
+  
   
     ++core->clk;
     // Are we reaching the final instruction?
