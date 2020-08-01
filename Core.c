@@ -39,7 +39,7 @@ bool tickFunc(Core *core)
 	//** decoding / reg reading  **
 	
 	// call control unit 
-	/* Signal control_unit_input = (instruction / 64);
+	 Signal control_unit_input = (instruction / 64);
 	ControlSignals *signals = NULL;
 	ControlUnit(control_unit_input, signals);
 	// run immGen 
@@ -97,7 +97,7 @@ bool tickFunc(Core *core)
 	incremented_instruction = core->PC = mux_3_signal;
 	//printf("The data in register %x is %lx",write_register, core->reg_file[write_register]);
     
- */
+ 
     ++core->clk;
     // Are we reaching the final instruction?
     if (core->PC > core->instr_mem->last->addr)
