@@ -43,6 +43,7 @@ bool tickFunc(Core *core)
 	ControlSignals *signals = NULL;
 	ControlUnit(control_unit_input, signals);
 	// run immGen 
+		/* 
 	Signal ImmeGen_sig = ImmeGen(instruction); // <------------------------------------ not finished, fix this!!!!!!!!!!!!!
 	
 	//get reg values
@@ -64,7 +65,7 @@ bool tickFunc(Core *core)
 		core->reg_file[reg_index_1] = 0;// result of memory manipulation Mux all the way to the right
 	
 	}
-	/* 
+
 	//call 
 	// ** execute / address calc
 	// mux1
